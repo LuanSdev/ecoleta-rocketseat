@@ -3,6 +3,7 @@ import knex from '../database/connection';
 
 class PointsController {
 
+  // RETORNA APENAS UM VALOR ESPECÍFICO, UM VALOR FILTRADO POR PARÂMETROS
   async show(request : Request, response : Response){
     const {id} = request.params;
 
@@ -20,9 +21,11 @@ class PointsController {
     return response.json({point, items});
   }
 
+  // RETORNA VALORES FILTRADOS POR QUERYS
   async index(request : Request, response : Response){
     const {city, uf, items} = request.query;
 
+    // Separa o array de item passados na query e os separa e remove os espaços
     const parsedItems = String(items)
     .split(',')
     .map(item => Number(item.trim()));
@@ -39,6 +42,8 @@ class PointsController {
 
   }
 
+
+  /* Cria um ponto de coleta */
   async create(request: Request, response: Response) {
     const {
       name,
@@ -51,6 +56,8 @@ class PointsController {
       items,
     } = request.body;
 
+    // Garante que as duas querys sejam executadas
+    // Caso uma dê errado, retorna um callback e cancela todas
     const trx = await knex.transaction();
 
     const point = {
@@ -77,6 +84,8 @@ class PointsController {
 
     await trx('point_items').insert(pointItems);
 
+    // MUITO IMPORTANTE
+    // Envia as querys ao banco e aguarda serem executadas
     await trx.commit();
 
     return response.json({
