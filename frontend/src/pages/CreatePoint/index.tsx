@@ -1,6 +1,7 @@
 import React, {useEffect, useState, ChangeEvent} from 'react';
 import {Link} from 'react-router-dom';
 import {TileLayer, Map, Marker} from 'react-leaflet';
+import {LeafletMouseEvent} from 'leaflet';
 import axios from 'axios';
 
 import { FiArrowLeft } from 'react-icons/fi';
@@ -43,6 +44,17 @@ const CreatePoint = () => {
     const [cities, setCities] = useState<string[]>([]);
     const [activeCity, setActiveCity] = useState('');
 
+    const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
+    const [center, setCenter] = useState<[number, number]>([0, 0]);
+
+    useEffect(() => {
+      navigator.geolocation.getCurrentPosition(position => {
+        const {latitude, longitude} = position.coords;
+
+        setSelectedPosition([latitude, longitude]);
+        setCenter([latitude, longitude]);
+      })
+    }, [])
     // Pega os itens do banco
     useEffect(() => {
         api.get('/items').then(response => {
@@ -77,6 +89,10 @@ const CreatePoint = () => {
 
     function handleCitySelected(event : ChangeEvent<HTMLSelectElement>){
       setActiveCity(event.target.value);
+    }
+
+    function handleMapClick(event : LeafletMouseEvent){
+      setSelectedPosition([event.latlng.lat, event.latlng.lng]);
     }
 
     return (
@@ -136,13 +152,13 @@ const CreatePoint = () => {
                         <span>Selecione o endereço no mapa</span>
                     </legend>
 
-                    <Map center={[-23.0737447,-48.9102096]} zoom={15}>
+                    <Map center={center} zoom={15} onClick={handleMapClick}>
                         <TileLayer
                             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
 
-                        <Marker position={[-23.0737447,-48.9102096]}/>
+                        <Marker position={selectedPosition}/>
                     </Map>
 
                     <div className="field-group">

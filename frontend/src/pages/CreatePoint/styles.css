@@ -32,6 +32,7 @@
     max-width: 730px;
     background: #FFF;
     border-radius: 8px;
+    border: 2px solid #dfdfd9;
 
     display: flex;
     flex-direction: column;
@@ -84,7 +85,7 @@
     flex: 1;
     background: #F0F0F5;
     border-radius: 8px;
-    border: 0;
+    border: 1px solid #dfdfd9;
     padding: 16px 24px;
     font-size: 16px;
     color: #6C6C80;
@@ -97,7 +98,7 @@
     flex: 1;
     background: #F0F0F5;
     border-radius: 8px;
-    border: 0;
+    border: 1px solid #dfdfd9;
     padding: 16px 24px;
     font-size: 16px;
     color: #6C6C80;
