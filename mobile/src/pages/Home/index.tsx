@@ -1,19 +1,10 @@
 import React from 'react';
-import {AppLoading} from 'expo';
+import {Feather as Icon} from '@expo/vector-icons';
 import {View, Image, StyleSheet, Text, ImageBackground} from 'react-native';
-import {Roboto_400Regular, Roboto_500Medium} from '@expo-google-fonts/roboto';
-import {Ubuntu_700Bold, useFonts} from '@expo-google-fonts/ubuntu';
+import {RectButton} from 'react-native-gesture-handler';
+
 
 const Home = () => {
-    const fontsLoaded = useFonts({
-        Roboto_400Regular,
-        Roboto_500Medium,
-        Ubuntu_700Bold
-    });
-
-    if(!fontsLoaded){
-        return <AppLoading/> 
-    }
 
     return (
         // imageBackground é uma view que aceita imagem de background
@@ -27,6 +18,15 @@ const Home = () => {
                 <Text style={styles.title}>Seu marketplace de coleta de resíduos</Text>
                 <Text style={styles.description}>Ajudamos as pessoas as encontrarem pontos de coleta de forma eficiente.</Text>
             </View>
+
+            <View style={styles.footer}>
+                <RectButton style={styles.button}onPress={() => {}}>
+                  <View style={styles.buttonIcon}>
+                    <Text><Icon name="arrow-right" color="#fff"/></Text>
+                  </View>
+                  <Text style={styles.buttonText}>Entrar</Text>
+                </RectButton>
+            </View>
         </ImageBackground>
     )
 }
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 32,
-    backgroundColor: '#f0f0fff5'
+    backgroundColor: '#f0f0f5'
   },
 
   main: {
