@@ -4,7 +4,7 @@ import {AppLoading} from 'expo';
 import {Roboto_400Regular, Roboto_500Medium, useFonts} from '@expo-google-fonts/roboto';
 import {Ubuntu_700Bold} from '@expo-google-fonts/ubuntu';
 
-import Home from './src/pages/Home';
+import Routes from './src/routes';
 
 export default function App() {
 
@@ -24,7 +24,7 @@ export default function App() {
     <>
       {/* transluced impede que a statusbar conflita com o conteúdo */}
       <StatusBar hidden={true} translucent backgroundColor="transparent"/>
-      <Home/>
+      <Routes/>
     </>
     
   );

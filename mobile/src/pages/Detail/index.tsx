@@ -1,3 +1,10 @@
+import React from 'react';
+import {View, StyleSheet} from 'react-native';
+
+const Details = () => {
+  return <View/>
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -71,3 +78,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto_500Medium',
   },
 });
+
+
+export default Details;
