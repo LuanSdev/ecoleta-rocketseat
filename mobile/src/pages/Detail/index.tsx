@@ -1,17 +1,63 @@
-import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, Text, SafeAreaView} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, TouchableOpacity, Image, Text, SafeAreaView, Linking} from 'react-native';
 import {Feather as Icon, FontAwesome} from '@expo/vector-icons';
-import Constants from 'expo-constants';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {RectButton} from 'react-native-gesture-handler';
+import api from '../../services/api';
+import * as MailComposer from 'expo-mail-composer';
+
+interface Params{
+  point_id : number
+}
+
+interface Data{
+  point : {
+    image : string,
+    name : string,
+    email : string,
+    whatsapp : string,
+    city : string,
+    uf : string,
+  }
+    
+  item : {
+    title : string,
+  }[]
+}
 
 const Details = () => {
+  const [data, setData] = useState<Data>({} as Data);
+
   const navigate = useNavigation();
+  const route = useRoute();
+
+  const {point_id} = route.params as Params
+
+  useEffect(() => {
+    api.get(`points/${point_id}`).then(response => {
+      setData(response.data);
+    })
+  }, [])
 
   function handleNavigateBack(){
     navigate.goBack();
   }
 
+  if(!data.point){
+    return null;
+  }
+
+  function handleWhatsapp(){
+    Linking.openURL(`whatsapp://send?phone=${data.point.whatsapp}&text=Tenho interesse na coleta de resíduos.`)
+  }
+
+  function handleComposeMail(){
+    MailComposer.composeAsync({
+      subject : 'Interesse na coleta de resíduos.',
+      recipients : [data.point.email],
+
+    });
+  }
   return( 
     <SafeAreaView style={{flex :1}}>
       <View style={styles.container}>
@@ -19,25 +65,25 @@ const Details = () => {
             <Icon name="arrow-left" size={20} color="#34cb29" onPress={handleNavigateBack}/>
         </TouchableOpacity>
 
-        <Image style={styles.pointImage} source={{uri : "https://skyhub.com.br/wp-content/uploads/2017/03/Como-entrar-em-um-marketplace.png"}}/>
+        <Image style={styles.pointImage} source={{uri : data.point.image}}/>
       
-        <Text style={styles.pointName}>Mercadão do Seu João</Text>
-        <Text style={styles.pointItems}>Lãmpadas, Óleo de cozinha</Text>
+        <Text style={styles.pointName}>{data.point.name}</Text>
+        <Text style={styles.pointItems}></Text>
 
         <View style={styles.address}>
           <Text style={styles.addressTitle}>Endereço</Text>
-          <Text style={styles.addressContent}>Avaré, SP</Text>
+          <Text style={styles.addressContent}>{data.point.city}, {data.point.uf}</Text>
         </View>
 
       </View>
 
       <View style={styles.footer}>
-        <RectButton style={styles.button} onPress={()=>{}}>
+        <RectButton style={styles.button} onPress={handleWhatsapp}>
             <FontAwesome name="whatsapp" size={20} color="#fff"/>
             <Text style={styles.buttonText}>Whatsapp</Text>
         </RectButton>
 
-        <RectButton style={styles.button} onPress={()=>{}}>
+        <RectButton style={styles.button} onPress={handleComposeMail}>
             <Icon name="mail" size={20} color="#fff"/>
             <Text style={styles.buttonText}>E-mail</Text>
         </RectButton>

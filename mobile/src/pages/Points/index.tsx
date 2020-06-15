@@ -62,7 +62,7 @@ const Points = () => {
         city : 'Avaré',
         uf : 'SP',
         items : [
-          5
+          1
         ]
       }
     }).then(response => {
